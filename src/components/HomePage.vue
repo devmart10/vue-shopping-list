@@ -4,11 +4,11 @@
       <img alt="Vue logo" src="../assets/shopping_cart.png" class="object-contain h-32" />
 
       <h1 class="text-3xl">Welcome to Shopping List!</h1>
-      <label for>
-        Enter a code
-        <input type="text" class="border" v-model="code" />
-        <button class="px-1 mx-1 border" @click="handleCode">&rarr;</button>
-      </label>
+      <span>Enter a code</span>
+      <flex>
+        <input type="text" class="mr-2 border" v-model="code" />
+        <button class="px-1 font-bold text-orange-500 border border-orange-500" @click="handleCode">Go</button>
+      </flex>
       <span>or create a new one!</span>
       <button class="text-white bg-orange-500" @click="handleCreate">New List</button>
     </div>
@@ -29,11 +29,11 @@
 
         <span class="ml-auto">{{ item.price ? `$${item.price}` : "-" }}</span>
       </div>
-      <div class="flex mt-2">
-        <input type="text" placeholder="New item..." v-model="newItem.title" class="border" />
-        <input type="text" placeholder="Quantity..." v-model="newItem.quantity" class="border" />
-        <input type="text" placeholder="Price..." v-model="newItem.price" class="border" />
-        <button class="px-1 mx-1 border" @click="addNewItem">&rarr;</button>
+      <div class="flex flex-wrap mt-2">
+        <input type="text" placeholder="New item..." v-model="newItem.title" class="w-auto border" />
+        <input type="text" placeholder="Amount" v-model="newItem.quantity" class="w-16 border" />
+        <input type="text" placeholder="Price" v-model="newItem.price" class="w-16 border" />
+        <button class="px-1 font-bold text-orange-500 border border-orange-500" @click="addNewItem">Add Item</button>
       </div>
     </div>
     <!-- --- -->
@@ -75,12 +75,14 @@ export default {
       console.log(`handling code ${this.code}`);
       console.log(`go to list page...`);
     },
-    handleCreate() {
+    async handleCreate() {
       console.log(`go to new list page...`);
-      //   this.$firestoreRefs.cities.add({
-      //     name: "Paris",
-      //     slogan: "La Ville lumière",
-      //   });
+      const ref = await lists.add({
+        name: "New List",
+        items: [],
+      });
+      console.log(ref);
+      this.code = ref.Pc.path.segments[1];
     },
     markComplete(index) {
       this.list.items[index].complete = !this.list.items[index].complete;
